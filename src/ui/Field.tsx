@@ -44,7 +44,7 @@ export function Select(props: {
                     background: "#fff"
                 }}
             >
-                <option value="" disabled>
+                <option value="">
                     — оберіть —
                 </option>
                 {props.options.map((o) => (
