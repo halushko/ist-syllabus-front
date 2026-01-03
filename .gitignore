@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 /.idea/ist-syllabus-front.iml
 /.idea/modules.xml
 /.idea/vcs.xml
+/package-lock.json

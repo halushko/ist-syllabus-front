@@ -1,0 +1,28 @@
+services:
+  front:
+    build:
+        context: https://github.com/halushko/ist-syllabus-front.git#v0.1.2
+        dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_BASE=http://localhost:8080
+  back:
+    build:
+      context: https://github.com/halushko/ist-syllabus-back.git#v0.1.2
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ADDR: ":8080"
+      SPREAD_SHEET_ID: "1opYS1-QG6NHpZcXcQmp_xxS2c2o-FZHmmIE0Meqw7SI"
+      GOOGLE_CREDS_JSON: "/run/secrets/gsheets-reader.json"
+      LOG_FILE: "/app/logs/app.log"
+      LOG_LEVEL: "debug"
+      MAX_GOOGLE_SHEET_COLS: "100"
+      MAX_GOOGLE_SHEET_ROWS: "1000"
+      DB_PATH: "./data/sqlite"
+    volumes:
+      - ./gsheets-reader.json:/run/secrets/gsheets-reader.json:ro
+      - ./logs:/app/logs
+      - ./data/sqlite:/app/data/sqlite
