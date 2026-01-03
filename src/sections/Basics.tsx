@@ -14,7 +14,7 @@ type Status = {
 }
 
 type Level = {
-    id: string
+    short: string
     name: string
 }
 
