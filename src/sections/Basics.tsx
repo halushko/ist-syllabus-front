@@ -5,7 +5,7 @@ import { API_BASE } from "../main";
 import {Field} from "../ui/Field";
 
 
-function toOptions(items: Array<{ id?: string; name: string }>): Option[] {
+function toOptions(items: Array<{ id: string; name: string }>): Option[] {
     return items.map((x) => ({
         value: x.id && x.id.trim() !== "" ? x.id : x.name,
         label: x.name
@@ -82,7 +82,7 @@ export default function Basics(props: {
 
     const canLoadSemesters = b.level !== ""
     const semestersUrl = canLoadSemesters
-        ? `/api/get-semesters?level=${encodeURIComponent(b.level)}&status=${encodeURIComponent(b.status)}`
+        ? `/api/get-semesters?level=${encodeURIComponent(b.level)}`
         : null
     const semesters = useDependentSelectOptions<GetNameAndIdResult>(semestersUrl, (data) =>
         toOptions(data.values ?? [])
