@@ -1,3 +1,18 @@
+export type Option = { value: string; label: string }
+
+export type Response = {
+    errors: string[]
+}
+
+export type NameAndId = {
+    id: string
+    name: string
+}
+
+export type GetNameAndIdResult = Response & {
+    values: NameAndId[]
+}
+
 export type SyllabusDraft = {
     basics: {
         status: string;

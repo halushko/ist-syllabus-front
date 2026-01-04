@@ -1,32 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Select } from "../ui/Field"
-import { SyllabusDraft } from "../app/types"
+import {Select, useDependentSelectOptions} from "../ui/Field"
+import {SyllabusDraft, Response, GetNameAndIdResult, Option} from "../app/types"
 import { API_BASE } from "../main";
 import {Field} from "../ui/Field";
 
-type Response = {
-    errors: string[]
-}
-
-type Status = {
-    id: string
-    name: string
-}
-
-type Level = {
-    short: string
-    name: string
-}
-
-type GetAllStatusesResult = Response & {
-    statuses: Status[]
-}
-
-type GetAllLevelsResult = Response & {
-    levels: Level[]
-}
-
-type Option = { value: string; label: string }
 
 function toOptions(items: Array<{ id?: string; name: string }>): Option[] {
     return items.map((x) => ({
@@ -91,12 +68,24 @@ export default function Basics(props: {
     const set = (k: keyof typeof b, v: string) =>
         props.setDraft((d) => ({ ...d, basics: { ...d.basics, [k]: v } }))
 
-    const statuses = useApiSelectOptions<GetAllStatusesResult>("/api/get-all-statuses", (data) =>
-        toOptions(data.statuses ?? [])
+    const statuses = useApiSelectOptions<GetNameAndIdResult>("/api/get-all-statuses", (data) =>
+        toOptions(data.values ?? [])
     )
 
-    const levels = useApiSelectOptions<GetAllLevelsResult>("/api/get-all-levels", (data) =>
-        toOptions(data.levels ?? [])
+    const levels = useApiSelectOptions<GetNameAndIdResult>("/api/get-all-levels", (data) =>
+        toOptions(data.values ?? [])
+    )
+
+    const forms = useApiSelectOptions<GetNameAndIdResult>("/api/get-all-forms", (data) =>
+        toOptions(data.values ?? [])
+    )
+
+    const canLoadSemesters = b.level !== ""
+    const semestersUrl = canLoadSemesters
+        ? `/api/get-semesters?level=${encodeURIComponent(b.level)}&status=${encodeURIComponent(b.status)}`
+        : null
+    const semesters = useDependentSelectOptions<GetNameAndIdResult>(semestersUrl, (data) =>
+        toOptions(data.values ?? [])
     )
 
     return (
@@ -108,12 +97,24 @@ export default function Basics(props: {
                 onChange={(v) => set("status", v)}
                 options={statuses.options}
             />
-
             <Select
                 label="Рівень"
                 value={b.level}
                 onChange={(v) => set("level", v)}
                 options={levels.options}
+            />
+            <Select
+                label="Форма навчання"
+                value={b.controlForm}
+                onChange={(v) => set("controlForm", v)}
+                options={forms.options}
+            />
+            <Select
+                label="Семестр"
+                value={b.semester}
+                onChange={(v) => set("semester", v)}
+                options={[{ value: "", label: "— оберіть —" }, ...semesters.options]}
+                disabled={!canLoadSemesters}
             />
         </div>
     )
