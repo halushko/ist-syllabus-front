@@ -82,7 +82,7 @@ export default function Basics(props: {
 
     const canLoadSemesters = b.level !== ""
     const semestersUrl = canLoadSemesters
-        ? `/api/get-semesters?level=${encodeURIComponent(b.level)}`
+        ? `/api/get-all-semesters?level=${encodeURIComponent(b.level)}`
         : null
     const semesters = useDependentSelectOptions<GetNameAndIdResult>(semestersUrl, (data) =>
         toOptions(data.values ?? [])
